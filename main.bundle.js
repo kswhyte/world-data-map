@@ -44,147 +44,19 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	// require('./scripts/clickableOrthographic.js')
 	__webpack_require__(1)
 	__webpack_require__(2)
-	__webpack_require__(3)
+	__webpack_require__(4)
 	__webpack_require__(5)
 	__webpack_require__(6)
-	__webpack_require__(7)
 
-	__webpack_require__(8)
-	__webpack_require__(12)
+	__webpack_require__(7)
+	__webpack_require__(11)
 
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
-
-	var width = 950,
-	    height = 700;
-
-	var colors = { clickable: 'darkgrey', hover: 'grey', clicked: "red", clickhover: "darkred" };
-
-	var projection = d3.geo.orthographic()
-	    .scale(300)
-	    .translate([width / 2, height / 2])
-	    .clipAngle(90)
-	    .precision(10);
-
-	var path = d3.geo.path()
-	    .projection(projection);
-
-	var graticule = d3.geo.graticule();
-
-	var map = d3.select("body").append("svg")
-	    .attr("width", width)
-	    .attr("height", height)
-	    .attr("class", "map");
-
-	map.append("defs").append("path")
-	    .datum({type: "Sphere"})
-	    .attr("id", "sphere")
-	    .attr("d", path);
-
-	map.append("use")
-	    .attr("class", "stroke")
-	    .attr("xlink:href", "#sphere");
-
-	map.append("use")
-	    .attr("class", "fill")
-	    .attr("xlink:href", "#sphere");
-
-	map.append("path")
-	    .datum(graticule)
-	    .attr("class", "graticule")
-	    .attr("d", path);
-
-	// queue()
-	//     .defer(d3.json, "/mbostock/raw/4090846/world-110m.json")
-	//     .defer(d3.tsv, "/mbostock/raw/4090846/world-country-names.tsv")
-	//     .await(ready);
-
-	function ready(error, world, names) {
-	  if (error) throw error;
-
-	  var globe = {type: "Sphere"},
-	    land = topojson.feature(world, world.objects.land),
-	    countries = topojson.feature(world, world.objects.countries).features,
-	    borders = topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; });
-
-	  countries = countries.filter(function(d) {
-	    return names.some(function(n) {
-	      if (d.id == n.id) return d.name = n.name;
-	    });
-	  }).sort(function(a, b) {
-	    return a.name.localeCompare(b.name);
-	  });
-
-	  map.insert("path", ".graticule")
-	      .datum(topojson.feature(world, world.objects.land))
-	      .attr("class", "land")
-	      .attr("d", path);
-
-	  for(i = 0; i < names.length; i++) {
-	    for (j = 0; j < countries.length; j++) {
-	      if (countries[j].id == names[i].id) {
-	        map.insert("path", ".graticule")
-	          .datum(countries[j])
-	          .attr("fill", colors.clickable)
-	          .attr("d", path)
-	          .attr("class", "clickable")
-	          .attr("data-country-id", j)
-	          .on("click", function() {
-	            d3.selectAll(".clicked")
-	              .classed("clicked", false)
-	              .attr("fill", colors.clickable);
-	            d3.select(this)
-	              .classed("clicked", true)
-	              .attr("fill", colors.clicked);
-
-	            (function transition() {
-	              d3.select(".clicked").transition()
-	              .duration(1250)
-	              .tween("rotate", function() {
-	                var p = d3.geo.centroid(countries[d3.select(this).attr("data-country-id")]),
-	                    r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
-	                return function (t) {
-	                  projection.rotate(r(t));
-	                  map.selectAll("path").attr("d", path);
-	                }
-	              });
-	            })();
-	          })
-	          .on("mousemove", function() {
-	            var c = d3.select(this);
-	            if (c.classed("clicked")) {
-	              c.attr("fill", colors.clickhover);
-	            } else {
-	              c.attr("fill", colors.hover);
-	            }
-	          })
-	          .on("mouseout", function() {
-	            var c = d3.select(this);
-	            if (c.classed("clicked")) {
-	              c.attr("fill", colors.clicked);
-	            } else {
-	              d3.select(this).attr("fill", colors.clickable);
-	            }
-	          });
-	      }
-	    }
-	  }
-
-	  map.insert("path", ".graticule")
-	      .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
-	      .attr("class", "boundary")
-	      .attr("d", path);
-	};
-
-	d3.select(self.frameElement).style("height", height + "px");
-
-
-/***/ },
-/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*eslint-disable no-unused-vars*/
@@ -10264,7 +10136,7 @@
 
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -27333,10 +27205,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(4)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(3)(module)))
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -27352,7 +27224,7 @@
 
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports) {
 
 	$( ".USA" ).click(function() {
@@ -27381,20 +27253,47 @@
 	  scope: 'world',
 	  element: document.getElementById('container'),
 	  projection: 'orthographic',
+	  geographyConfig: {
+	    highlightOnHover: true,
+	    popupOnHover: true,
+	    // popupTemplate: function() {
+	    //   return ('<div class="hoverinfo">Heyoooo</div>');
+	    // }
+	    // dataUrl: '/custom.json',
+	  },
+	  scope: 'world',
+	  // setProjection: function(element, options) {
+	  //   var projection, path;
+	  //   projection = d3.geoOrthographic()
+	  //       .center([long, lat])
+	  //       .scale(element.offsetWidth)
+	  //       .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+	  //   path = d3.geo.path()
+	  //       .projection( projection );
+	  //   return {path: path, projection: projection};
+	  // },
+	  // -------------
+	  // Zoom in on Africa
+	  // setProjection: function(element) {
+	  //   var projection = d3.geo.equirectangular()
+	  //     .center([23, -3])
+	  //     .rotate([4.4, 0])
+	  //     .scale(400)
+	  //     .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+	  //   var path = d3.geo.path()
+	  //     .projection(projection);
+	  //
+	  //   return {path: path, projection: projection};
+	  // },
+	  // -------------
+	  projectionConfig: {
+	    rotation: [101, -40] //North America
+	    // rotation: [-20, 4] //Africa
+	    // rotation: [30],
+	    // rotation: [30]
+	  },
 	  fills: {
-	    // randomizeColor: function getColor(){
-	    //   var ascii = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70];
-	    //   var color = '#';
-	    //   while (color.length < 7){
-	    //     color += String.fromCharCode(ascii[Math.floor(Math.random() * 16)]);
-	    //   }
-	    //   if (color === '#ffffff') {
-	    //     getColor();
-	    //   } else {
-	    //     return color;
-	    //   }
-	    // },
-	    defaultFill: "darkgrey",
+	    defaultFill: "grey",
 	    randomColor0: getColor(),
 	    randomColor1: getColor(),
 	    randomColor2: getColor(),
@@ -27403,35 +27302,8 @@
 	    randomColor5: getColor(),
 	    randomColor6: getColor(),
 	    randomColor7: getColor(),
-	    // eq50: this.fills.randomizeColor(),
-	    // lt25: this.fills.randomizeColor(),
-	    // gt75: this.fills.randomizeColor(),
-	    // lt50: this.fills.randomizeColor(),
-	    // eq0: this.fills.randomizeColor(),
-	    // pink: this.fills.randomizeColor(),
-	    // gt500: this.fills.randomizeColor()
 	  },
-	  projectionConfig: {
-	    rotation: [101, -40] //North America
-	    // rotation: [-20, 4] //Africa
-	    // rotation: [30],
-	    // rotation: [30]
-	  },
-	  // Zoom in on Africa
-	  element: document.getElementById("container"),
-	  scope: 'world',
-	  setProjection: function(element) {
-	    var projection = d3.geo.equirectangular()
-	      .center([23, -3])
-	      .rotate([4.4, 0])
-	      .scale(400)
-	      .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
-	    var path = d3.geo.path()
-	      .projection(projection);
 
-	    return {path: path, projection: projection};
-	  },
-	  // -------------
 	  // zoomFunction: function zoomFunction() {
 	  //   d3.selectAll("path")
 	  //     .attr("transform",
@@ -27451,8 +27323,9 @@
 	    'HND': {fillKey: 'randomColor4'},
 	    'BLZ': {fillKey: 'randomColor5'},
 	    'GRL': {fillKey: 'randomColor6'},
-	    'CAN': {fillKey: 'randomiColor7'}
-	  }
+	    'CAN': {fillKey: 'randomColor7'}
+	  },
+	  // map.legend();
 	// });
 
 	// map.graticule();
@@ -27473,7 +27346,7 @@
 
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports) {
 
 	// $( ".USA" ).click(function() {
@@ -27482,7 +27355,7 @@
 
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	var zoom = new Datamap({
@@ -27540,16 +27413,16 @@
 
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(9);
+	var content = __webpack_require__(8);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(11)(content, {});
+	var update = __webpack_require__(10)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -27566,10 +27439,10 @@
 	}
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(10)();
+	exports = module.exports = __webpack_require__(9)();
 	// imports
 
 
@@ -27580,7 +27453,7 @@
 
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/*
@@ -27636,7 +27509,7 @@
 
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -27888,16 +27761,16 @@
 
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(13);
+	var content = __webpack_require__(12);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(11)(content, {});
+	var update = __webpack_require__(10)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -27914,10 +27787,10 @@
 	}
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(10)();
+	exports = module.exports = __webpack_require__(9)();
 	// imports
 
 
